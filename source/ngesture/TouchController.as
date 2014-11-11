@@ -22,7 +22,6 @@ package ngesture {
 
         public function add(pGesture:AbstractGesture):void {
             if (_gestures.hasOwnProperty(pGesture.id)) {
-                trace('TouchController.add: WARNING duplicating gesture with id', pGesture.id);
                 return;
             }
 
@@ -72,8 +71,6 @@ package ngesture {
         };
 
         private function touchEventHandler(pEvent:TouchEvent):void {
-            trace('TouchController.touchEventHandler:', pEvent.touches);
-
             var gesture:AbstractGesture;
             var gesturesByPriority:Array = [];
 
@@ -83,24 +80,18 @@ package ngesture {
 
             gesturesByPriority.sortOn('priority', Array.DESCENDING | Array.NUMERIC);
 
-            trace('TouchController.touchEventHandler:', gesturesByPriority);
-
             for (var i:int = 0; i < gesturesByPriority.length; i++) {
-                trace('TouchController.touchEventHandler:', gesture);
                 gesture = gesturesByPriority[i] as AbstractGesture;
 
                 if (!isGestureActive(gesture)) {
-                    trace('TouchController.touchEventHandler: gesture is deactivated', gesture.id);
                     continue;
                 }
 
                 if (!gesture.validate(pEvent)) {
-                    trace('TouchController.touchEventHandler: gesture invalid', gesture.id);
                     continue;
                 }
 
                 if (gesture.process(pEvent)) {
-                    trace('TouchController.touchEventHandler: executed', gesture.id);
                     return;
                 }
             }
@@ -109,11 +100,8 @@ package ngesture {
         private function gestureCompleteEventHandler(pEvent:Event):void {
             var gesture:AbstractGesture = pEvent.target as AbstractGesture;
             if (!isGestureActive(gesture)) {
-                trace('TouchController.gestureCompleteEventHandler: gesture is inactive', gesture.id);
                 return;
             }
-
-            trace('TouchController.gestureCompleteEventHandler: ', gesture.id);
 
             dispatchEventWith(gesture.id, false, gesture);
         };
@@ -121,11 +109,8 @@ package ngesture {
         private function gestureChangeEventHandler(pEvent:Event):void {
             var gesture:AbstractGesture = pEvent.target as AbstractGesture;
             if (!isGestureActive(gesture)) {
-                trace('TouchController.gestureChangeEventHandler: gesture is inactive', gesture.id);
                 return;
             }
-
-            trace('TouchController.gestureChangeEventHandler:', gesture.id);
 
             dispatchEventWith(gesture.id + CHANGE, false, gesture);
         };

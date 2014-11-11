@@ -47,8 +47,6 @@ package ngesture {
 
             for (var i:int = 0; i < pEvent.touches.length; i++) {
                 var touch:Touch = getTouch(pEvent, i);
-                trace('AbstractGesture.process:', touch, i);
-
                 if (!touch) {
                     continue;
                 }
